@@ -11,22 +11,16 @@
         Console.WriteLine(scores1);
         Console.WriteLine(scores2);
     }
-    private static int ResultScore(char c1, char c2) => c1 switch {
-        'A' => c2 switch {
-            'X' => 3,
-            'Y' => 6,
-            'Z' => 0,
-        },
-        'B' => c2 switch {
-            'X' => 0,
-            'Y' => 3,
-            'Z' => 6,
-        },
-        'C' => c2 switch {
-            'X' => 6,
-            'Y' => 0,
-            'Z' => 3,
-        },
+    private static int ResultScore(char c1, char c2) => new List<char> {c1, c2} switch {
+            ['A', 'X'] => 3,
+            ['A', 'Y'] => 6,
+            ['A', 'Z'] => 0,
+            ['B', 'X'] => 0,
+            ['B', 'Y'] => 3,
+            ['B', 'Z'] => 6,
+            ['C', 'X'] => 6,
+            ['C', 'Y'] => 0,
+            ['C', 'Z'] => 3,
     };
 
     private static int ChoiceScore(char c) => c switch {
@@ -41,21 +35,15 @@
         'Z' => 6,
     };
 
-    private static int ChoiceScore2(char c1, char c2) => c1 switch {
-        'A' => c2 switch {
-            'X' => 3,
-            'Y' => 1,
-            'Z' => 2,
-        },
-        'B' => c2 switch {
-            'X' => 1,
-            'Y' => 2,
-            'Z' => 3,
-        },
-        'C' => c2 switch {
-            'X' => 2,
-            'Y' => 3,
-            'Z' => 1,
-        },
+    private static int ChoiceScore2(char c1, char c2) => new List<char> {c1, c2} switch {
+            ['A', 'X'] => 3,
+            ['A', 'Y'] => 1,
+            ['A', 'Z'] => 2,
+            ['B', 'X'] => 1,
+            ['B', 'Y'] => 2,
+            ['B', 'Z'] => 3,
+            ['C', 'X'] => 2,
+            ['C', 'Y'] => 3,
+            ['C', 'Z'] => 1,
     };
 }

@@ -4,28 +4,27 @@
     {
         var path = "input1.txt";
         var calorieList = GetCalorieLists(path); 
-        var max = calorieList.Select(x => x.Sum()).Max();
+        var max = calorieList.Max();
         Console.WriteLine(max);
         var topThree = calorieList
-            .Select(x => x.Sum())
             .OrderDescending()
             .Take(3)
             .Sum();
         Console.WriteLine(topThree);
     }
 
-    private static List<List<int>> GetCalorieLists(string path)
+    private static List<int> GetCalorieLists(string path)
     {
         var lines = File.ReadLines(path);
-        var calorieList = new List<List<int>>();
-        var currentList = new List<int>();
+        var calorieList = new List<int>();
+        var count = 0;
         foreach (var line in lines){
             if (line == "") {
-                calorieList.Add(currentList);
-                currentList = new List<int>();
+                calorieList.Add(count);
+                count = 0;
             }
             else {
-                currentList.Add(int.Parse(line));
+                count += int.Parse(line);
             }
         }
 
