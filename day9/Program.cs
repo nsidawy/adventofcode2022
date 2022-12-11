@@ -26,12 +26,12 @@
                     "L" => p => p.Change(-1, 0),
                     "R" => p => p.Change(1, 0),
                 };
-                var targetPosition = positions[0].Clone();
                 nextPosition(positions[0]);
                 var j = 1;
-                while(j < positions.Count - 1){
+                while(j < positions.Count){
+                    var targetPosition = positions[j - 1];
                     Func<Position, Position, bool> segmentCompare;
-                    if (direction == "U" && positions[j].Y + 1 == targetPosition.Y) {
+                    if (positions[j].Y + 2 == targetPosition.Y) {
                         if(positions[j].X == targetPosition.X){
                             nextPosition = p => p.Change(0, 1);
                             segmentCompare = (t, c) => t.X == c.X && t.Y == c.Y + 1;
@@ -48,7 +48,7 @@
                         } else {
                             break;
                         }
-                    } else if (direction == "D" && positions[j].Y - 1 == targetPosition.Y) {
+                    } else if (positions[j].Y - 2 == targetPosition.Y) {
                         if(positions[j].X == targetPosition.X){
                             nextPosition = p => p.Change(0, -1);
                             segmentCompare = (t, c) => t.X == c.X && t.Y == c.Y - 1;
@@ -65,7 +65,7 @@
                         } else {
                             break;
                         }
-                    } else if (direction == "R" && positions[j].X + 1 == targetPosition.X) {
+                    } else if (positions[j].X + 2 == targetPosition.X) {
                         if(positions[j].Y == targetPosition.Y){
                             nextPosition = p => p.Change(1, 0);
                             segmentCompare = (t, c) => t.X == c.X + 1 && t.Y == c.Y;
@@ -82,7 +82,7 @@
                         } else {
                             break;
                         }
-                    } else if (direction == "L" && positions[j].X - 1 == targetPosition.X) {
+                    } else if (positions[j].X - 2 == targetPosition.X) {
                         if(positions[j].Y == targetPosition.Y){
                             nextPosition = p => p.Change(-1, 0);
                             segmentCompare = (t, c) => t.X == c.X - 1 && t.Y == c.Y;
@@ -149,6 +149,7 @@
         }
         public override string ToString() => $"({this.X},{this.Y})";
         public override bool Equals(object? obj) => obj is Position && ((Position)obj).X == this.X && ((Position)obj).Y == this.Y;
+        public override int GetHashCode() => this.X + this.Y * 1000;
         public Position Clone() => new Position(this.X, this.Y);
     }
 
