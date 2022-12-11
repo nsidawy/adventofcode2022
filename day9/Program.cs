@@ -1,14 +1,9 @@
 ﻿internal class Program
 {
-    public enum Move {
-        N, NE, E, SE, S, SW, W, NW 
-    }
-
     private static void Main(string[] args)
     {
-        var moves = File.ReadLines("test2.txt").ToList();
-        //Console.WriteLine(GetTailCount(moves));
-        //Console.WriteLine(GetTailCount(moves, 2));
+        var moves = File.ReadLines("input1.txt").ToList();
+        Console.WriteLine(GetTailCount(moves, 2));
         Console.WriteLine(GetTailCount(moves, 10));
     }
 
@@ -16,7 +11,7 @@
         var positions = Enumerable.Range(0, length).Select(x => new Position()).ToList();
         var visitedY = new HashSet<Position>();
         foreach (var move in moves) {
-            Console.WriteLine(move);
+            //Console.WriteLine(move);
             var m = move.Split(" ");
             for(var i = 0; i < int.Parse(m[1]); i++) {
                 var direction = m[0];
@@ -108,8 +103,8 @@
                         j++;
                     } while(j < positions.Count && segmentCompare(targetPosition, positions[j]));
                 }
-                Console.WriteLine(string.Join(',', positions.Select((p,i) => $"{i}:{p}").ToList()));
-                PrintPositions(positions);
+                //Console.WriteLine(string.Join(',', positions.Select((p,i) => $"{i}:{p}").ToList()));
+                //PrintPositions(positions);
                 visitedY.Add(positions.Last());
             }
         }
@@ -151,57 +146,5 @@
         public override bool Equals(object? obj) => obj is Position && ((Position)obj).X == this.X && ((Position)obj).Y == this.Y;
         public override int GetHashCode() => this.X + this.Y * 1000;
         public Position Clone() => new Position(this.X, this.Y);
-    }
-
-    public static int GetTailCount(List<string> moves) {
-        var positionH = (0, 0);
-        var positionY = (0, 0);
-        var visitedY = new HashSet<(int, int)>();
-        foreach (var move in moves) {
-            var m = move.Split(" ");
-            for(var i = 0; i < int.Parse(m[1]); i++) {
-                switch(m[0]) {
-                    case "D":
-                        if(positionY.Item1 == positionH.Item1 && positionY.Item2 - 1 == positionH.Item2){
-                            positionY = positionH;
-                        }
-                        if(Math.Abs(positionY.Item1 - positionH.Item1) == 1 && positionY.Item2 - 1 == positionH.Item2){
-                            positionY = positionH;
-                        }
-                        positionH = (positionH.Item1, positionH.Item2 - 1);
-                        break;
-                    case "U":
-                        if(positionY.Item1 == positionH.Item1 && positionY.Item2 + 1 == positionH.Item2){
-                            positionY = positionH;
-                        }
-                        if(Math.Abs(positionY.Item1 - positionH.Item1) == 1 && positionY.Item2 + 1 == positionH.Item2){
-                            positionY = positionH;
-                        }
-                        positionH = (positionH.Item1, positionH.Item2 + 1);
-                        break;
-                    case "L":
-                        if(positionY.Item1 - 1 == positionH.Item1 && positionY.Item2 == positionH.Item2){
-                            positionY = positionH;
-                        }
-                        if(positionY.Item1 - 1 == positionH.Item1 && Math.Abs(positionY.Item2 - positionH.Item2) == 1){
-                            positionY = positionH;
-                        }
-                        positionH = (positionH.Item1 - 1, positionH.Item2);
-                        break;
-                    case "R":
-                        if(positionY.Item1 + 1 == positionH.Item1 && positionY.Item2 == positionH.Item2){
-                            positionY = positionH;
-                        }
-                        if(positionY.Item1 + 1 == positionH.Item1 && Math.Abs(positionY.Item2 - positionH.Item2) == 1){
-                            positionY = positionH;
-                        }
-                        positionH = (positionH.Item1 + 1, positionH.Item2);
-                        break;
-                } 
-                visitedY.Add(positionY);
-            }
-        }
-
-        return visitedY.Count;
     }
 }
