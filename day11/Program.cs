@@ -40,10 +40,6 @@ internal class Program
                 }
                 monkey.Items.RemoveAll(x => true);
             }
-            //Console.WriteLine($"Round {i}");
-            foreach (var monkey in monkeys) {
-                //Console.WriteLine($"{monkey.Id}: {string.Join(',', monkey.Items)} | {monkey.InspectionCount}");
-            }
         }
     }
 
