@@ -3,15 +3,41 @@
     private static void Main(string[] args)
     {
         var (elevations, start, end) = ReadInput("input.txt");
-        var best = InitializeBest(elevations);
-        Process(elevations, best, start, end, 0);
-        Console.WriteLine(best[end.Item1][end.Item2]);
-        var allStartsScore = GetAllStarts(elevations).Select(s => {
-            var best = InitializeBest(elevations);
-            Process(elevations, best, s, end, 0);
-            return best[end.Item1][end.Item2];
-        }).ToList();
-        Console.WriteLine(allStartsScore.Min());
+        var best = Enumerable.Range(0, elevations.Length)
+            .Select(_ => Enumerable.Repeat(int.MaxValue, elevations[0].Length).ToArray())
+            .ToArray();
+        Process(elevations, best, end, start, 0);
+        Console.WriteLine(best[start.Item1][start.Item2]);
+        var allStartScores = new List<int>();
+        for(var i = 0; i < elevations.Length; i++) {
+            for (var j = 0; j < elevations[0].Length; j++) {
+                if(elevations[i][j] == 0){
+                    allStartScores.Add(best[i][j]);
+                }
+            }
+        }
+        Console.WriteLine(allStartScores.Min());
+    }
+
+
+    public static void Process(int[][] elevations, int[][] best, (int, int) location, (int, int) end, int count){
+        if(count >= best[location.Item1][location.Item2]) {
+            return;
+        } 
+        best[location.Item1][location.Item2] = count;
+        var currentEl = elevations[location.Item1][location.Item2];
+        if(location.Item1 > 0 && elevations[location.Item1 - 1][location.Item2] - currentEl >= -1) {
+            Process(elevations, best, (location.Item1 - 1, location.Item2), end, count + 1);
+        }
+        if(location.Item1 < elevations.Length - 1 && elevations[location.Item1 + 1][location.Item2] - currentEl >= -1) {
+            Process(elevations, best, (location.Item1 + 1, location.Item2), end, count + 1);
+        }
+        if(location.Item2 > 0 && elevations[location.Item1][location.Item2 - 1] - currentEl >= -1) {
+            Process(elevations, best, (location.Item1, location.Item2 - 1), end, count + 1);
+        }
+        if(location.Item2 < elevations[0].Length - 1 && elevations[location.Item1][location.Item2 + 1] - currentEl >= -1) {
+            Process(elevations, best, (location.Item1, location.Item2 + 1), end, count + 1);
+        }
     }
 
     public static (int[][], (int, int), (int, int)) ReadInput(string path) {
@@ -23,45 +49,6 @@
             .ToArray();
         var (start, end) = GetStartEnd(lines);
         return (elevations, start, end);
-    }
-
-    public static int[][] InitializeBest(int[][] elevations) {
-        return Enumerable.Range(0, elevations.Length)
-            .Select(_ => Enumerable.Repeat(int.MaxValue, elevations[0].Length).ToArray())
-            .ToArray();
-    }
-
-    public static void Process(int[][] elevations, int[][] best, (int, int) location, (int, int) end, int count){
-        if(count >= best[location.Item1][location.Item2]) {
-            return;
-        } 
-        best[location.Item1][location.Item2] = count;
-        //if(location == end) {
-        //    return;
-        //}
-        var currentEl = elevations[location.Item1][location.Item2];
-        if(location.Item1 > 0 && elevations[location.Item1 - 1][location.Item2] - currentEl <= 1) {
-            Process(elevations, best, (location.Item1 - 1, location.Item2), end, count + 1);
-        }
-        if(location.Item1 < elevations.Length - 1 && elevations[location.Item1 + 1][location.Item2] - currentEl <= 1) {
-            Process(elevations, best, (location.Item1 + 1, location.Item2), end, count + 1);
-        }
-        if(location.Item2 > 0 && elevations[location.Item1][location.Item2 - 1] - currentEl <= 1) {
-            Process(elevations, best, (location.Item1, location.Item2 - 1), end, count + 1);
-        }
-        if(location.Item2 < elevations[0].Length - 1 && elevations[location.Item1][location.Item2 + 1] - currentEl <= 1) {
-            Process(elevations, best, (location.Item1, location.Item2 + 1), end, count + 1);
-        }
-    }
-
-    public static IEnumerable<(int, int)> GetAllStarts(int[][] elevations) {
-        for(var i = 0; i < elevations.Length; i++) {
-            for (var j = 0; j < elevations[0].Length; j++) {
-                if(elevations[i][j] == 0){
-                    yield return (i, j);
-                }
-            }
-        }
     }
 
     public static ((int, int), (int, int)) GetStartEnd(string[] lines){
