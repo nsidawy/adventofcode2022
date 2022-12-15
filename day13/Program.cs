@@ -13,7 +13,7 @@
             })
             .ToList();
         for (var i = 0; i < allPackets.Count; i += 2) {
-            if(itemComparer.Compare(allPackets[i], allPackets[i+1]) < 0) {
+            if(allPackets[i].CompareTo(allPackets[i+1]) < 0) {
                 sum += (i/2) + 1;
             }
         }
@@ -23,7 +23,7 @@
         var two = new L(new List<Item> { new L(2) });
         allPackets.Add(six);
         allPackets.Add(two);
-        allPackets.Sort(itemComparer);
+        allPackets.Sort();
         var sixIndex = allPackets.IndexOf(six) + 1;
         var twoIndex = allPackets.IndexOf(two) + 1;
         Console.WriteLine(twoIndex * sixIndex);
@@ -53,7 +53,37 @@
         return (new L(), -1);
     }
 
-    public interface Item {}
+    public class Item : IComparable
+    {
+        public int CompareTo(object? obj)
+        {
+            var item = (Item)obj;
+            if(this is V v1 && item is V v2) {
+                return (v1.Value < v2.Value)
+                    ?  -1 
+                    : (v1.Value > v2.Value) 
+                        ? 1
+                        : 0;
+            } else if(this is L l1 && item is L l2) {
+                for (var i = 0; i < l1.Items.Count; i++){
+                    if(i == l2.Items.Count) {
+                        return 1;
+                    }
+                    var result = l1.Items[i].CompareTo(l2.Items[i]);
+                    if(result != 0) {
+                        return result;
+                    }
+                }
+                return l1.Items.Count == l2.Items.Count ? 0 : -1;
+            }
+
+            var i1n = this is V v1n ? new L(v1n.Value) : this;
+            var i2n = item is V v2n ? new L(v2n.Value) : item;
+        
+            return i1n.CompareTo(i2n);
+        }
+    }
+    
     public class L : Item {
         public L() {
             this.Items = new List<Item>();
@@ -66,40 +96,11 @@
         }
         public List<Item> Items {get;}
     }
+    
     public class V : Item {
         public V(int value) {
             this.Value = value;
         }
         public int Value {get;}
-    }
-
-    public class ItemComparer : IComparer<Item>
-    {
-        public int Compare(Item? i1, Item? i2)
-        {
-            if(i1 is V v1 && i2 is V v2) {
-                return (v1.Value < v2.Value)
-                    ?  -1 
-                    : (v1.Value > v2.Value) 
-                        ? 1
-                        : 0;
-            } else if(i1 is L l1 && i2 is L l2) {
-                for (var i = 0; i < l1.Items.Count; i++){
-                    if(i == l2.Items.Count) {
-                        return 1;
-                    }
-                    var result = this.Compare(l1.Items[i], l2.Items[i]);
-                    if(result != 0) {
-                        return result;
-                    }
-                }
-                return l1.Items.Count == l2.Items.Count ? 0 : -1;
-            }
-
-            var i1n = i1 is V v1n ? new L(v1n.Value) : i1;
-            var i2n = i2 is V v2n ? new L(v2n.Value) : i2;
-        
-            return this.Compare(i1n, i2n);
-        }
     }
 }
