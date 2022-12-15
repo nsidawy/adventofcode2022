@@ -4,7 +4,6 @@
     {
         var lines = File.ReadLines("input.txt").ToList();
         var sum = 0;
-        var itemComparer = new ItemComparer();
         var allPackets = lines
             .Where(l => l != string.Empty)
             .Select(l => {
@@ -96,7 +95,7 @@
         }
         public List<Item> Items {get;}
     }
-    
+
     public class V : Item {
         public V(int value) {
             this.Value = value;
