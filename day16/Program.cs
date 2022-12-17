@@ -2,6 +2,8 @@
 
 internal class Program
 {
+    public static int currentMax = 0;
+
     private static void Main(string[] args)
     {
         var valves = File.ReadLines("input.txt")
@@ -24,9 +26,7 @@ internal class Program
         Traverse2(valves["AA"], valves["AA"], valves, new HashSet<string> { "AA" }, 0, 26);
         Console.WriteLine(currentMax);
     }
-
-    public static int currentMax = 0;
-
+    
     public static void Traverse(
         Valve current,
         Dictionary<string, Valve> valves,
