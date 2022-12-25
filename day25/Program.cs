@@ -26,11 +26,10 @@
     }
     
     private static long ParseSnafu(string s) {
-         var revl = s.Reverse().ToList();
          long total = 0;
-         for(var i = 0; i < revl.Count; i++) {
+         for(var i = 0; i < s.Length; i++) {
              var b = (long)Math.Pow(5, i);
-             total += b * (revl[i] switch {
+             total += b * (s[s.Length - i - 1] switch {
                  '0' => 0,
                  '1' => 1,
                  '2' => 2,
