@@ -4,41 +4,32 @@
     {
         var sum = File.ReadLines("input.txt")
             .Select(ParseSnafu).Sum();
-        Console.WriteLine(sum);
-        var max = 15;
-        while(true) {
-            Console.WriteLine(Math.Pow(5, max -1));
-            var snafu = Generate(max - 1, "2", sum);
-            if(snafu != null) {
-                Console.WriteLine(snafu);
-                break;
-            }
-            snafu = Generate(max - 1, "1", sum);
-            if(snafu != null) {
-                Console.WriteLine(snafu);
-                break;
-            }
-            max++;
+        Console.WriteLine("Sum:" + sum);
+        var max = 20;
+        for(var i = 0; i <= max; i++) {
+            sum += (long)(Math.Pow(5, i) * 2);
         }
-    }
-
-    public static string? Generate(int digits, string snafu, long target) {
-        if(digits == 0) {
-            return ParseSnafu(snafu) == target ? snafu : null;
+        var result = string.Empty;
+        for(var i = max; i >= 0; i--) {
+            var val = (int)(sum / Math.Pow(5, i)); 
+            sum %= (long)Math.Pow(5, i);
+            result += val switch {
+                0 => '=',
+                1 => '-',
+                2 => '0',
+                3 => '1',
+                4 => '2',
+            };
         }
-
-        return Generate(digits - 1, snafu + '0', target)
-            ?? Generate(digits - 1, snafu + '1', target)
-            ?? Generate(digits - 1, snafu + '2', target)
-            ?? Generate(digits - 1, snafu + '-', target)
-            ?? Generate(digits - 1, snafu + '=', target);
+        Console.WriteLine("Result (SNAFU): " + result);
+        Console.WriteLine("Result (decimal): " + ParseSnafu(result));
     }
-
+    
     private static long ParseSnafu(string s) {
          var revl = s.Reverse().ToList();
-         var total = 0;
+         long total = 0;
          for(var i = 0; i < revl.Count; i++) {
-             var b = (int)Math.Pow(5, i);
+             var b = (long)Math.Pow(5, i);
              total += b * (revl[i] switch {
                  '0' => 0,
                  '1' => 1,
